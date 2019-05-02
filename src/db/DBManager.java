@@ -173,19 +173,69 @@ PreparedStatement stmt = null;
         }
         return false;    }
     
-    // add new advertisement
-    public boolean addAdvertisement(){
-    return false;
+    // add new advertisement based on information entered in AddAdvertisement Screen
+    public boolean addAdvertisement(String Advertisement_ID, String AdvTitle, String AdvDetails, String Price, String User_ID, String Moderator_ID, String Category_ID, String Status_ID){
+        PreparedStatement stmt = null;
+        
+        String query = "insert into Advertisements (Advertisement_ID,AdvTitle,"
+                + "AdvDetails,AdvDateTime,Price,User_ID,Moderator_ID,Category_ID,Status_ID) "
+                + "VALUES (?,?,?,CURRENT_DATE(),?,?,?,?,?)";
+
+        try {
+            stmt=connection.prepareStatement(query);
+            stmt.setString(1,Advertisement_ID); //binding the parameter with the given string
+            stmt.setString(2,AdvTitle);
+            stmt.setString(3,AdvDetails);
+            stmt.setString(4,Price);
+            stmt.setString(5,User_ID);
+            stmt.setString(6,Moderator_ID);
+            stmt.setString(7,Category_ID);
+            stmt.setString(8,Status_ID);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
-    // delete advertisement
-    public boolean deleteAdvertisement(){
-    return false;
+    // delete advertisement from myAdvertisements screen
+    public boolean deleteAdvertisement(String Advertisement_ID){
+        PreparedStatement stmt = null;
+        
+        String query = "DELETE FROM Advertisements WHERE Advertisement_ID=?";
+        
+        try {
+            stmt=connection.prepareStatement(query);
+            stmt.setString(1, Advertisement_ID);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
-    // edit advertisement
-    public boolean editAdvertisement(){
-    return false;
+    // edit advertisement on myAdvertisements screen
+    //can only edit title, description, price
+    public boolean editAdvertisement(String Advertisement_ID, String AdvTitle, String AdvDetails, String Price){
+        PreparedStatement stmt = null;
+        
+        String query = "UPDATE Advertisements SET AdvTitle=?, AdvDetails=?, "
+                + "Price=? WHERE Advertisement_ID=?";
+
+        try {
+            stmt=connection.prepareStatement(query);
+            stmt.setString(1,AdvTitle); //binding the parameter with the given string
+            stmt.setString(2,AdvDetails);
+            stmt.setString(3,Price);
+            stmt.setString(5, Advertisement_ID);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
     
     // claim an advertisement
