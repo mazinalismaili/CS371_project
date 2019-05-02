@@ -23,7 +23,7 @@ public class Main {
         DBManager DB=new DBManager();
         try{
             
-            DB.connect("mmarq2","8JkNlKueVExnmEAc8hmL","KC-SCE-APPDB01","3306","mmarq2");
+            DB.connect("username","password","KC-SCE-APPDB01","3306","schema");
             JFrame LoginFrame=new LoginFrame(DB);
             LoginFrame.setVisible(true);
         }
