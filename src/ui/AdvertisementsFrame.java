@@ -300,8 +300,8 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
     private void addAdvButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAdvButtonActionPerformed
         // TODO add your handling code here:
         //FIXME: check name for add advertisement screen
-        //AddAdvertisementFrame addFrame=new AddAdvertisementFrame(this,DB,Advertisement_ID);
-        //addFrame.setVisible(true);
+        AddAdvertisement addFrame=new AddAdvertisement(this,DB,User_ID);
+        addFrame.setVisible(true);
     }//GEN-LAST:event_addAdvButtonActionPerformed
 
     private void goFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goFilterButtonActionPerformed
@@ -333,20 +333,22 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         int row = this.myAdvertisements_table.getSelectedRow();
         if (row >=0 ) {
+            String Advertisement_ID=(String)myAdvertisements_table.getValueAt(row, 0);
             String AdvTitle=(String)myAdvertisements_table.getValueAt(row, 1);
             String AdvDetails=(String)myAdvertisements_table.getValueAt(row, 2);
             String Price=(String)myAdvertisements_table.getValueAt(row, 3);
             
-            //FIXME: should they be able to edit the date
-            String AdvDateTime=(String)myAdvertisements_table.getValueAt(row, 5);
-            
-            //FIXME: check what the method in DB is named
-            //DB.changeAdvertisementStatus(AdvTitle, AdvDetails, Price);
+            DB.editAdvertisement(Advertisement_ID, AdvTitle, AdvDetails, Price);
         }
     } 
     
      private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {
-         // TODO add your handling code here:
+         int row = this.myAdvertisements_table.getSelectedRow();
+         
+         if (row >= 0) {
+             String Advertisement_ID=(String)myAdvertisements_table.getValueAt(row, 0);
+             DB.deleteAdvertisement(Advertisement_ID);
+         }
      }
      
     /*~~~~~~~~~~ Populate Functions ~~~~~~~~~~*/
