@@ -305,15 +305,13 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addAdvButtonActionPerformed
 
     private void goFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goFilterButtonActionPerformed
-        // TODO add your handling code here:
-        populate_advertisements_table();
-        DefaultTableModel dm;//  = new DefaultTableModel() ;
-        dm= (DefaultTableModel) advertisements_table.getModel();
-        dm.addColumn(columnsAdv); 
-        String toFilter = titleDescText.getText();
-        TableRowSorter<DefaultTableModel> results = new TableRowSorter<DefaultTableModel>(dm);
-        advertisements_table.setRowSorter(results);
-        results.setRowFilter(RowFilter.regexFilter(toFilter));
+
+        
+        
+        Object[][] ads = DB.getFilterdAdevertisements("CAT","","");
+        this.advertisements_table.setModel(new DefaultTableModel(ads,columnsAdv));
+        
+    ;
         
     }//GEN-LAST:event_goFilterButtonActionPerformed
 
@@ -383,10 +381,6 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
     }
     private void filter(String filterd){
     
-    //if(filterd != ""){ 
-
-        
-    //}
     }
     
     /**

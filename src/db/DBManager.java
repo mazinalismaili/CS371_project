@@ -48,11 +48,10 @@ public class DBManager {
     public Object[][] getAdevertisements(){
     
         PreparedStatement stmt = null;
-        
+        String query;
         Object[][] result = new Object[][]{};
-        
-        String query = "SELECT Advertisement_ID, AdvTitle, AdvDetails, Price, Status_ID, AdvDateTime FROM advertisements WHERE Status_ID =?";
-        
+
+        query = "SELECT Advertisement_ID, AdvTitle, AdvDetails, Price, Status_ID, AdvDateTime FROM advertisements WHERE Status_ID =?";
         try{
             stmt=connection.prepareStatement(query);
             stmt.setString(1,"AC"); //binding the parameter with the given string
@@ -69,16 +68,78 @@ public class DBManager {
         return result;
     }
     
+    
+    // get filterd ads:
+    public Object[][] getFilterdAdevertisements(String category, String period, String contain){
+    
+    PreparedStatement stmt = null;
+        String query;
+        Object[][] result = new Object[][]{};
+        query = "SELECT Advertisement_ID, AdvTitle, AdvDetails, Price, Status_ID, AdvDateTime FROM advertisements WHERE Status_ID =?";
+        boolean ctgry = false;
+        String ctgry_txt = category;
+        boolean perid = false;
+        String perid_txt = period;
+        boolean cntns = false;
+        String cntns_txt = contain;
+
+        if( !"".equals(ctgry_txt))
+        {
+            query += " AND Category_ID=?";
+            ctgry = true;
+        }
+        
+        if( !"".equals(perid_txt))
+        {
+            query += " AND AdvDateTime=?";
+            perid = true;
+        }
+        if( !"".equals(cntns_txt))
+        {
+            query += " AND AdvTitle=? OR AdvDetails=?";
+            perid = true;
+        }
+        
+        
+        
+        
+        //query = "SELECT Advertisement_ID, AdvTitle, AdvDetails, Price, Status_ID, AdvDateTime FROM advertisements WHERE Status_ID =?";
+        try{
+            stmt=connection.prepareStatement(query);
+        stmt.setString(1,"AC"); //binding the parameter with the given string
+        //stmt.setString(1,"AC");
+        if(ctgry)
+        {
+            stmt.setString(2,ctgry_txt);
+        }
+        if(perid)
+        {
+            stmt.setString(3,perid_txt);
+        }
+        if(cntns)
+        {
+            stmt.setString(4,cntns_txt);
+        }
+            ResultSet rs = stmt.executeQuery();
+            int count = getResultSetSize(rs);
+            result=getFinalAds(count,rs);
+        }
+        
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            return result;
+        }
+        return result;
+    }
     // get the final object result fot the previous (above) function.
     private Object[][] getFinalAds(int count,ResultSet rs) throws SQLException {
         Object[][] result=new Object[count][4];
         int index=0;
        do {
-            //String Account_ID = rs.getString("Advertisement_ID");
+            
             String Title = rs.getString("AdvTitle");
             String Details = rs.getString("AdvDetails");
             String Price = rs.getString("Price");
-            //String Status = rs.getString("Status_ID");
             String Time = rs.getString("AdvDateTime");
 
             Advertisement advertisement=new Advertisement(Title,Details,Price,Time);
