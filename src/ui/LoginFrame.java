@@ -115,10 +115,9 @@ public class LoginFrame extends javax.swing.JFrame {
                 else
                 {
                     JOptionPane.showMessageDialog(this, "Valid user ID", "Found", JOptionPane.INFORMATION_MESSAGE);
-                    
-                       AdvertisementsFrame userAdFrame =new AdvertisementsFrame(db,username);
-                       userAdFrame.setVisible(true);
-                       this.setVisible(false);
+                    AdvertisementsFrame userAdFrame =new AdvertisementsFrame(db,username);
+                    userAdFrame.setVisible(true);
+                    this.setVisible(false);
                 }
                 break;
                 

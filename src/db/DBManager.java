@@ -201,7 +201,7 @@ PreparedStatement stmt = null;
             stmt.setString(3,AdvDetails);
             stmt.setString(4,Price);
             stmt.setString(5,User_ID);
-            stmt.setString(6,Moderator_ID);
+            stmt.setString(6,Moderator_ID);// should be null --> unclaimed
             stmt.setString(7,Category_ID);
             stmt.setString(8,Status_ID);
             stmt.executeUpdate();

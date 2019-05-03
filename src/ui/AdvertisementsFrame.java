@@ -307,7 +307,7 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
     private void goFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goFilterButtonActionPerformed
         // TODO add your handling code here:
         populate_advertisements_table();
-        DefaultTableModel dm  = new DefaultTableModel() ;
+        DefaultTableModel dm;//  = new DefaultTableModel() ;
         dm= (DefaultTableModel) advertisements_table.getModel();
         dm.addColumn(columnsAdv); 
         String toFilter = titleDescText.getText();
