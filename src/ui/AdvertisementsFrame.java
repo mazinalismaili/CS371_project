@@ -311,6 +311,31 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
         Object[][] ads = DB.getFilterdAdevertisements("CAT","","");
         this.advertisements_table.setModel(new DefaultTableModel(ads,columnsAdv));
         
+        //code for getting the information from combo boxes and text field
+         /*
+         String category = categoryDrop.getSelectedItem().toString();
+         
+         String period = periodDrop.getSelectedItem().toString();
+         String months;
+         
+         if (period == "Last 3 Months") {
+             months = "3";
+         }
+         else if (period == "Last 6 Months") {
+             months = "6";
+         }
+         else if (period == "Last 12 Months") {
+             months = "12";
+         }
+         else {
+             months = "0";
+         }
+         
+         String text = titleDescText.getText();
+         
+         DB.filterAdvertisements(category, months, text);
+         */
+        
     ;
         
     }//GEN-LAST:event_goFilterButtonActionPerformed
