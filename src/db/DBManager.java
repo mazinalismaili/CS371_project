@@ -51,11 +51,11 @@ public class DBManager {
         
         Object[][] result = new Object[][]{};
         
-        String query = "SELECT Advertisement_ID, AdvTitle, AdvDetails, Price, Status_ID, AdvDateTime FROM advertisements";
+        String query = "SELECT Advertisement_ID, AdvTitle, AdvDetails, Price, Status_ID, AdvDateTime FROM advertisements WHERE Status_ID =?";
         
         try{
             stmt=connection.prepareStatement(query);
-            //stmt.setString(1,"3"); //binding the parameter with the given string
+            stmt.setString(1,"AC"); //binding the parameter with the given string
             //stmt.setString(1,"CAT"); //binding the parameter with the given string
             ResultSet rs = stmt.executeQuery();
             int count = getResultSetSize(rs);
@@ -112,15 +112,28 @@ public class DBManager {
     
     // get the final object result fot the previous (above) function.
     private Object[][] getFinalUserAds(int count,ResultSet rs) throws SQLException {
-        Object[][] result=new Object[count][4];
+        Object[][] result=new Object[count][6];
         int index=0;
        do {
             String Account_ID = rs.getString("Advertisement_ID");
             String Title = rs.getString("AdvTitle");
             String Details = rs.getString("AdvDetails");
             String Price = rs.getString("Price");
-            String Status = rs.getString("Status_ID");
+            String Status="";
+            //String Status = rs.getString("Status_ID");
             String Time = rs.getString("AdvDateTime");
+            if("AC".equals(rs.getString("Status_ID")))
+            {
+                 Status = "ACTIVE";
+            }
+            else if("PN".equals(rs.getString("Status_ID")))
+            {
+                Status = "Pending"; 
+            }
+            else if("DI".equals(rs.getString("Status_ID"))){
+               Status = "Disapproved";  
+            }else{Status = "null";}
+            
 
             UserAdvertisement advertisement=new UserAdvertisement(Account_ID, Title,Details,Price,Status ,Time);
             result[index++]=advertisement.toArray();

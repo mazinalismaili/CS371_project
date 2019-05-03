@@ -7,7 +7,10 @@ package ui;
 
 import db.DBManager;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -19,10 +22,10 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
      * Creates new form AdvertisementsFrame
      */
     DBManager DB;
-    //String Advertisement_ID;
+    
     
     String User_ID;
-    
+        
     //columns for advertisements_table
     String[] columnsAdv=new String[] {
          "Title", "Description", "Price", "Date"
@@ -35,13 +38,13 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
     
     public AdvertisementsFrame(DBManager DB, String username) {
        
-        
+       
         this.setTitle("Username: " + username);
         this.DB=DB;
         this.User_ID = username;
         initComponents();
-        
-        
+        //getColumns();
+
         
         /**
         int category = categoryDrop.getSelectedIndex();
@@ -150,6 +153,11 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
         TitleDescLabel.setText("Title, Description");
 
         goFilterButton.setText("GO");
+        goFilterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                goFilterButtonActionPerformed(evt);
+            }
+        });
 
         advertisements_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -296,7 +304,19 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
         //addFrame.setVisible(true);
     }//GEN-LAST:event_addAdvButtonActionPerformed
 
-    
+    private void goFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goFilterButtonActionPerformed
+        // TODO add your handling code here:
+        populate_advertisements_table();
+        DefaultTableModel dm  = new DefaultTableModel() ;
+        dm= (DefaultTableModel) advertisements_table.getModel();
+        dm.addColumn(columnsAdv); 
+        String toFilter = titleDescText.getText();
+        TableRowSorter<DefaultTableModel> results = new TableRowSorter<DefaultTableModel>(dm);
+        advertisements_table.setRowSorter(results);
+        results.setRowFilter(RowFilter.regexFilter(toFilter));
+        
+    }//GEN-LAST:event_goFilterButtonActionPerformed
+
     /*~~~~~~~~~~ Advertisements Tab (filter category, filter period, filter title) ~~~~~~~~~~*/
     private void categoryDropActionPerformed(java.awt.event.ActionEvent evt) {                                             
         // TODO add your handling code here:
@@ -353,6 +373,20 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
         //FIXME: how to ensure only advertisments from a certain username in display
         //Object[][] myAdvertisements_data=DB.getAdvertisements(Advertisement_ID);
         //this.myAdvertisements_table.setModel(new DefaultTableModel(myAdvertisements_data, columnsMyAdv));
+    }
+    
+    private void getColumns()
+    {
+        
+        
+    
+    }
+    private void filter(String filterd){
+    
+    //if(filterd != ""){ 
+
+        
+    //}
     }
     
     /**
