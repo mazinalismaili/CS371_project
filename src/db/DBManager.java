@@ -313,12 +313,41 @@ PreparedStatement stmt = null;
     }
     
     // claim an advertisement
-    public boolean claimAdvertisemsnt(){
-        return false;
+    // sets the moderator to the moderator that is logged in 
+    public boolean claimAdvertisement(String Advertisement_ID, String Moderator_ID){
+        PreparedStatement stmt = null;
+        
+        String query = "UPDATE Advertisements SET Moderator_ID=?"
+                + "WHERE Advertisement_ID=?";
+
+        try {
+            stmt=connection.prepareStatement(query);
+            stmt.setString(1,Moderator_ID); //binding the parameter with the given string
+            stmt.setString(2, Advertisement_ID);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
-    // aprrove advertisement
-    public boolean approveAdvertisemsnt(){
-        return false;
+    // approve advertisement
+    // sets the status to active
+    public boolean approveAdvertisement(String Advertisement_ID){
+                PreparedStatement stmt = null;
+        
+        String query = "UPDATE Advertisements SET Status_ID=AC"
+                + "WHERE Advertisement_ID=?";
+
+        try {
+            stmt=connection.prepareStatement(query);
+            stmt.setString(1,Advertisement_ID); //binding the parameter with the given string
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
     
     /* This function from: "Canvas/DB_Classroom" project */
