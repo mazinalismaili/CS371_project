@@ -308,9 +308,9 @@ public class ModeratorFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable myAdvTable;
+    private javax.swing.JTable myAdv_table;
     private javax.swing.JComboBox<String> periodDrop;
     private javax.swing.JTextField titleDescText;
+    private javax.swing.JTable unclaimedAdv_table;
     // End of variables declaration//GEN-END:variables
 }
