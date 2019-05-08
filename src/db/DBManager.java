@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
  */
 public class DBManager {
     Connection connection;
+        /* This function from: "Canvas/DB_Classroom" project */
     public void connect(String userName, String password, String serverName, String portNumber, String dbName) throws SQLException, InstantiationException, IllegalAccessException {
         System.out.println("Loading driver...");
 
@@ -69,7 +70,6 @@ public class DBManager {
         }
         return result;
     }
-    
     
     // get filterd ads:
     public Object[][] getFilterdAdevertisements(String category, String period, String contain){
@@ -207,6 +207,160 @@ public class DBManager {
         return result;
     } 
     
+    /*~~~~~~~~~~~~~~~ Moderator Screen Table Population ~~~~~~~~~~~~~~~*/
+     //get unlclaimed ads
+    public Object[][] getModUnclaimedAdv(String username){
+        PreparedStatement stmt = null;
+        String query;
+        Object[][] result = new Object[][]{};
+
+        query = "SELECT Advertisement_ID, AdvTitle, AdvDetails, Price, AdvDateTime, User_ID FROM advertisements WHERE Moderator_ID IS NULL";
+        try{
+            stmt=connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            int count = getResultSetSize(rs);
+            result=getFinalModUnclaimedAds(count,rs);
+        }
+        
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            return result;
+        }
+        return result;
+    }
+    
+    // get the final object result fot the previous (above) function.
+    private Object[][] getFinalModUnclaimedAds(int count,ResultSet rs) throws SQLException {
+        Object[][] result=new Object[count][6];
+        int index=0;
+       do {
+            String Account_ID = rs.getString("Advertisement_ID");
+            String Title = rs.getString("AdvTitle");
+            String Details = rs.getString("AdvDetails");
+            String Price = rs.getString("Price");
+            String Time = rs.getString("AdvDateTime");
+            String User_ID = rs.getString("User_ID");
+
+            unClaimedAdvertisement advertisement=new unClaimedAdvertisement(Account_ID,Title,Details,Price,Time,User_ID);
+            result[index++]=advertisement.toArray();
+        }
+       while(rs.next());
+        return result;
+    } 
+    
+    public Object[][] getModMyAdv(String username){
+        PreparedStatement stmt = null;
+        String query;
+        Object[][] result = new Object[][]{};
+
+        query = "SELECT Advertisement_ID, AdvTitle, AdvDetails, Price, Status_ID, AdvDateTime, User_ID FROM advertisements WHERE Moderator_ID =?";
+        try{
+            stmt=connection.prepareStatement(query);
+            stmt.setString(1,username); //binding the parameter with the given string
+            ResultSet rs = stmt.executeQuery();
+            int count = getResultSetSize(rs);
+            result=getFinalModMyAds(count,rs);
+        }
+        
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            return result;
+        }
+        return result;
+    }
+     
+    // get the final object result fot the previous (above) function.
+    private Object[][] getFinalModMyAds(int count,ResultSet rs) throws SQLException {
+        Object[][] result=new Object[count][7];
+        int index=0;
+       do {
+            String Account_ID = rs.getString("Advertisement_ID");
+            String Title = rs.getString("AdvTitle");
+            String Details = rs.getString("AdvDetails");
+            String Price = rs.getString("Price");
+            String Status = rs.getString("Status_ID");
+            String Date = rs.getString("AdvDateTime");
+            String User_ID = rs.getString("User_ID");
+if("AC".equals(rs.getString("Status_ID")))
+            {
+                 Status = "ACTIVE";
+            }
+            else if("PN".equals(rs.getString("Status_ID")))
+            {
+                Status = "Pending"; 
+            }
+            else if("DI".equals(rs.getString("Status_ID"))){
+               Status = "Disapproved";  
+            }else{Status = "null";}
+            ModeratorAdvertisement advertisement=new ModeratorAdvertisement(Account_ID,Title,Details,Price,Status,Date,User_ID);
+            result[index++]=advertisement.toArray();
+        }
+       while(rs.next());
+        return result;
+    } 
+    
+    //filter ads on moderator screen by combo boxes and search box
+    public Object[][] getFilteredModAdv (String category, String period, String text) {
+        PreparedStatement stmt = null;
+        int position = 1;
+        String query;
+        Object[][] result = new Object[][]{};
+        query = "SELECT Advertisement_ID, AdvTitle, AdvDetails, Price, DATE_FORMAT(AdvDateTime, \"%Y-%m-%d\") AdvDateTime, User_ID FROM advertisements WHERE Moderator_ID IS NULL";
+        boolean ctgry = false;
+        String ctgry_txt = category;
+        boolean perid = false;
+        String perid_txt = period;
+        boolean cntns = false;
+        String cntns_txt = text;
+
+        if( !"All".equals(ctgry_txt))
+        {
+            query += " AND Category_ID=?";
+            ctgry = true;
+        }
+        
+        if( !"Life".equals(perid_txt))
+        {
+            query += " AND TIMESTAMPDIFF(MONTH,DATE_FORMAT(AdvDateTime, \"%Y-%m-%d\"),CURRENT_DATE()) = ?";
+            perid = true;
+        }
+        if( !"".equals(cntns_txt))
+        {
+            query += " AND AdvTitle LIKE CONCAT('%', ? ,'%') OR AdvDetails LIKE CONCAT('%', ? ,'%')";
+            cntns = true;
+        }
+        
+        
+        
+        try{
+            
+            stmt=connection.prepareStatement(query);
+            //stmt.setString(position++,"AC"); //binding the parameter with the given string
+            //stmt.setString(1,"AC");
+            if(ctgry)
+            {
+                stmt.setString(position++,ctgry_txt);
+            }
+            if(perid)
+            {
+                stmt.setString(position++,perid_txt);
+            }
+            if(cntns)
+            {
+                stmt.setString(position++,cntns_txt);
+                stmt.setString(position++,cntns_txt);
+            }
+                ResultSet rs = stmt.executeQuery();
+                int count = getResultSetSize(rs);
+                result=getFinalModUnclaimedAds(count,rs);
+            }
+
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            return result;
+        }
+        return result;
+}
     // function to check if the user exist.
     public boolean checkUser(String user_ID){
         // we will use try to check if the user is found, else we'll throw message that the user is not fount
@@ -255,10 +409,6 @@ PreparedStatement stmt = null;
     public boolean addAdvertisement(String AdvTitle, String AdvDetails, String Price, String User_ID, String Category_ID){
         PreparedStatement stmt = null;
         
-        //String query = "insert into Advertisements (Advertisement_ID,AdvTitle,"
-        //        + " AdvDetails,AdvDateTime,Price,User_ID,Moderator_ID,Category_ID,Status_ID) "
-        //        + " VALUES (?,?,?,CURRENT_DATE(),?,?,?,?,?)";
-        
         String NULL = null;
         String query = "insert into Advertisements (AdvTitle, AdvDetails, AdvDateTime, Price, Category_ID, User_ID, Moderator_ID, Status_ID)"
                 + "values(?,?,?,?,?,?,"+NULL+",?)";
@@ -266,14 +416,14 @@ PreparedStatement stmt = null;
         try {
             Date dateobj = new Date();
             stmt=connection.prepareStatement(query);
-            //stmt.setString(1,Advertisement_ID); //binding the parameter with the given string
-            stmt.setString(1,AdvTitle);         // titel
-            stmt.setString(2,AdvDetails);       // details
+            //stmt.setString(1,Advertisement_ID);   //binding the parameter with the given string
+            stmt.setString(1,AdvTitle);             // titel
+            stmt.setString(2,AdvDetails);           // details
             stmt.setString(3,new java.sql.Date(dateobj.getTime()).toString()); // time
-            stmt.setString(4,Price);            // price 
-            stmt.setString(5,Category_ID);      // category
-            stmt.setString(6,User_ID);          // user id
-            stmt.setString(7,"PN");        // status
+            stmt.setString(4,Price);                // price 
+            stmt.setString(5,Category_ID);          // category
+            stmt.setString(6,User_ID);              // user id
+            stmt.setString(7,"PN");                 // status
             stmt.executeUpdate();
             JOptionPane.showMessageDialog(null, "A new advertisement was added correctly", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
             return true;
@@ -294,8 +444,11 @@ PreparedStatement stmt = null;
             stmt=connection.prepareStatement(query);
             stmt.setString(1, Advertisement_ID);
             stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, " The advertisement has been deleted successfuly!", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+
             return true;
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,"Something went wrong when trying to delete the advertisement!","Error",JOptionPane.ERROR_MESSAGE);  
             System.out.println(e.getMessage());
             return false;
         }
@@ -323,13 +476,55 @@ PreparedStatement stmt = null;
         }
     }
     
-    // claim an advertisement
-    public boolean claimAdvertisement(String Advertisement_ID, String User_ID){
-        return false;
+    // sets the moderator to the moderator that is logged in 
+    public boolean claimAdvertisement(String Advertisement_ID, String Moderator_ID){
+        PreparedStatement stmt = null;
+        
+        String query = "UPDATE Advertisements SET Moderator_ID=?"
+                + "WHERE Advertisement_ID=?";
+
+        try {
+            stmt=connection.prepareStatement(query);
+            stmt.setString(1,Moderator_ID); //binding the parameter with the given string
+            stmt.setString(2, Advertisement_ID);
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "The advertisement has been claimed successfuly", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+
+            return true;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,"Something went wrong when trying to claim the advertisement!","Error",JOptionPane.ERROR_MESSAGE);  
+
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
-    // aprrove advertisement
-    public boolean approveAdvertisement(String Advertisement_ID){
-        return false;
+
+    public boolean approveAdvertisement(String Advertisement_ID,String approvement){
+        PreparedStatement stmt = null;
+        String approve;
+        if ("AC".equals(approvement)){
+            approve = "approved";
+        }else{
+             approve = "Disapproved";
+        }
+        String query = "UPDATE Advertisements SET Status_ID=?"
+                + "WHERE Advertisement_ID=?";
+
+        try {
+            stmt=connection.prepareStatement(query);
+            stmt.setString(1,approvement); //binding the parameter with the given string
+            stmt.setString(2,Advertisement_ID); //binding the parameter with the given string
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "The advertisement has been "+approve+" successfuly", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+
+            return true;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,"Something went wrong when trying to "+approve+" the advertisement!","Error",JOptionPane.ERROR_MESSAGE);  
+
+            System.out.println(e.getMessage());
+            return false;
+        }
+       
     }
     
     /* This function from: "Canvas/DB_Classroom" project */

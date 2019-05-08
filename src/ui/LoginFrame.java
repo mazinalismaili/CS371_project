@@ -32,29 +32,29 @@ public class LoginFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
+        username = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        usernameType = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        login_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
 
-        jTextField1.setText("rkale");
+        username.setText("jsmith");
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Username:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Moderator" }));
+        usernameType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Moderator" }));
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Type:");
 
-        jButton1.setText("Login");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        login_button.setText("Login");
+        login_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                login_buttonActionPerformed(evt);
             }
         });
 
@@ -69,9 +69,9 @@ public class LoginFrame extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                    .addComponent(jTextField1)
-                    .addComponent(jComboBox1, 0, 136, Short.MAX_VALUE))
+                    .addComponent(login_button, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                    .addComponent(username)
+                    .addComponent(usernameType, 0, 136, Short.MAX_VALUE))
                 .addGap(126, 126, 126))
         );
         layout.setVerticalGroup(
@@ -79,29 +79,29 @@ public class LoginFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(83, 83, 83)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(usernameType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(55, 55, 55)
-                .addComponent(jButton1)
+                .addComponent(login_button)
                 .addContainerGap(85, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void login_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_buttonActionPerformed
         // TODO add your handling code here:
         
         
         // get the username:
-        String username = this.jTextField1.getText();
+        String username = this.username.getText();
         
         //----------------
-        int getSelectedBox = jComboBox1.getSelectedIndex();
+        int getSelectedBox = usernameType.getSelectedIndex();
         
         // check the username based on the type
         switch(getSelectedBox){
@@ -131,23 +131,23 @@ public class LoginFrame extends javax.swing.JFrame {
                 {
                     JOptionPane.showMessageDialog(this, "Valid Moderator ID", "Found", JOptionPane.INFORMATION_MESSAGE);
                                         
-                    //   ModeratorAdFrame moderatorAdFrame =new ModeratorAdFrame(db,username);
-                    //   moderatorAdFrame.setVisible(true);
-                    //   this.setVisible(false);
+                       ModeratorFrame moderatorAdFrame =new ModeratorFrame(db,username);
+                       moderatorAdFrame.setVisible(true);
+                       this.setVisible(false);
                 }
                 break;
         }
         
         //----------------
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_login_buttonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton login_button;
+    private javax.swing.JTextField username;
+    private javax.swing.JComboBox<String> usernameType;
     // End of variables declaration//GEN-END:variables
 }

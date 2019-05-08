@@ -60,7 +60,7 @@ public class AddAdvertisement extends javax.swing.JFrame {
         DetailsTextArea.setRows(5);
         jScrollPane1.setViewportView(DetailsTextArea);
 
-        CategoriesComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "CAT", "HOU", "ELC", "CCA" }));
+        CategoriesComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CAT", "HOU", "ELC", "CCA" }));
 
         AddAdvertisementButton.setText("Add Advertisement");
         AddAdvertisementButton.addActionListener(new java.awt.event.ActionListener() {

@@ -25,13 +25,13 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
     
     
     String User_ID;
-        
+    
     //columns for advertisements_table
     String[] columnsAdv=new String[] {
          "Title", "Description", "Price", "Date"
     };
     
-    //columns for myAdvertisements_table
+//columns for myAdvertisements_table
     String[] columnsMyAdv=new String[] {
         "ID", "Title", "Description", "Price", "Status", "Date"
     };
@@ -246,12 +246,6 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
     private void addAdvButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAdvButtonActionPerformed
           AddAdvertisement add = new AddAdvertisement(this,DB,User_ID);
           add.setVisible(true);
-        //AddAdvertisement addAdv = new AddAdvertisement(this,DB, User_ID);
-        //addAdv.setVisible(true);
-        // TODO add your handling code here:
-        //FIXME: check name for add advertisement screen
-        //AddAdvertisement addFrame= new AddAdvertisement(this,DB,User_ID);
-        //addFrame.setVisible(true);
     }//GEN-LAST:event_addAdvButtonActionPerformed
 
     private void goFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goFilterButtonActionPerformed
@@ -263,19 +257,18 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
         if(period == "Last 3 months"){
         period = "3";
         } else if(period == "Last 6 months"){
-        period = "3";
+        period = "6";
         } else if(period == "Last 12 months"){
-        period = "3";
+        period = "12";
         } else{
         period = "Life";
         }
-        
-        
+       
         
         Object[][] ads = DB.getFilterdAdevertisements(category,period,details);
-        
         this.advertisements_table.setModel(new DefaultTableModel(ads,columnsAdv));
-        
+        //this.populate_advertisements_table();
+        //this.populate_myAdvertisements_table();
     }//GEN-LAST:event_goFilterButtonActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
@@ -289,7 +282,7 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
             
             DB.editAdvertisement(Advertisement_ID, AdvTitle, AdvDetails, Price);
             populate_myAdvertisements_table();
-}
+        }
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
@@ -300,7 +293,7 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
              DB.deleteAdvertisement(Advertisement_ID);
              populate_myAdvertisements_table();
 
-}
+         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     /*~~~~~~~~~~ Advertisements Tab (filter category, filter period, filter title) ~~~~~~~~~~*/
@@ -315,28 +308,7 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
      private void goFilterActionPerformed(java.awt.event.ActionEvent evt) {
          // TODO add your handling code here:
      }
-    
-    /*~~~~~~~~~~ My Advertisements Tab (edit, delete) ~~~~~~~~~~*/
-//    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-//        // TODO add your handling code here:
-//        int row = this.myAdvertisements_table.getSelectedRow();
-//        if (row >=0 ) {
-//            String AdvTitle=(String)myAdvertisements_table.getValueAt(row, 1);
-//            String AdvDetails=(String)myAdvertisements_table.getValueAt(row, 2);
-//            String Price=(String)myAdvertisements_table.getValueAt(row, 3);
-//            
-//            //FIXME: should they be able to edit the date
-//            String AdvDateTime=(String)myAdvertisements_table.getValueAt(row, 5);
-//            
-//            //FIXME: check what the method in DB is named
-//            //DB.changeAdvertisementStatus(AdvTitle, AdvDetails, Price);
-//        }
-//    } 
-    
-//     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {
-//         // TODO add your handling code here:
-//     }
-//     
+     
     /*~~~~~~~~~~ Populate Functions ~~~~~~~~~~*/
     public void populate_advertisements_table() {
         
