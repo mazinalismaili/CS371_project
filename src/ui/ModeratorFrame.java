@@ -5,6 +5,13 @@
  */
 package ui;
 
+import db.DBManager;
+import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+
 /**
  *
  * @author lesd4f
@@ -14,10 +21,37 @@ public class ModeratorFrame extends javax.swing.JFrame {
     /**
      * Creates new form Mod
      */
-    public ModeratorFrame() {
+    
+    DBManager DB;
+    
+    String User_ID;
+    
+    //columns for unclaimedAdv_table
+    String[] columnsUnclaimedAdv=new String[] {
+         "ID", "Title", "Description", "Price", "Date", "Username"
+    };
+    
+    //columns for myAdv_table
+    String[] columnsMyAdv=new String[] {
+         "ID", "Title", "Description", "Price", "Status", "Date", "Username"
+    };
+    
+    public ModeratorFrame(DBManager DB, String username) {
+        
+        //set up general attributes
+        this.setTitle("Username: " + username);
+        this.DB=DB;
+        this.User_ID = username;
+        
         initComponents();
+        
+        //set combo box items
         categoryDrop.setModel(new javax.swing.DefaultComboBoxModel (new String[] {"All", "CAT", "HOU", "ELC", "CCA"}));
         periodDrop.setModel(new javax.swing.DefaultComboBoxModel (new String[] {"Last 3 Months", "Last 6 Months", "Last 12 Months", "Life"}));
+    
+        //populate tables
+        this.populate_unclaimedAdv_table();
+        this.populate_myAdv_table();
     }
 
     /**
@@ -189,6 +223,42 @@ public class ModeratorFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_categoryDropActionPerformed
 
+    private void claimAdButtonActionPerformed(java.awt.event.ActionEvent evt) {
+         int row = this.unclaimedAdv_table.getSelectedRow();
+         
+         if (row >= 0) {
+             String Advertisement_ID=(String)unclaimedAdv_table.getValueAt(row, 0);
+             //FIXME: make sure user_id is the moderator
+             DB.claimAdvertisement(Advertisement_ID, User_ID);
+         }
+         
+         //populate tables
+        this.populate_unclaimedAdv_table();
+    }
+    
+    private void approveButtonActionPerformed(java.awt.event.ActionEvent evt) {
+         int row = this.myAdv_table.getSelectedRow();
+         
+         if (row >= 0) {
+             String Advertisement_ID=(String)myAdv_table.getValueAt(row, 0);
+             DB.approveAdvertisement(Advertisement_ID);
+         }
+         
+         //populate tables
+        this.populate_myAdv_table();
+     }
+    
+    /*~~~~~~~~~~ Populate Functions ~~~~~~~~~~*/
+    public void populate_unclaimedAdv_table() {
+        Object[][] ads = DB.getModUnclaimedAdv(User_ID);
+        this.unclaimedAdv_table.setModel(new DefaultTableModel(ads, columnsUnclaimedAdv));
+    }
+    
+    public void populate_myAdv_table(){
+        Object[][] ads = DB.getModMyAdv(User_ID);
+        this.myAdv_table.setModel(new DefaultTableModel(ads, columnsMyAdv));
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -238,9 +308,9 @@ public class ModeratorFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable myAdvTable;
+    private javax.swing.JTable myAdv_table;
     private javax.swing.JComboBox<String> periodDrop;
     private javax.swing.JTextField titleDescText;
+    private javax.swing.JTable unclaimedAdv_table;
     // End of variables declaration//GEN-END:variables
 }

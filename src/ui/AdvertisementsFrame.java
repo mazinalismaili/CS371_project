@@ -43,70 +43,6 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
         this.DB=DB;
         this.User_ID = username;
         initComponents();
-        //getColumns();
-
-        
-        /**
-        int category = categoryDrop.getSelectedIndex();
-        int date = periodDrop.getSelectedIndex();
-        String categoryType = "CAT";
-        String period = "3";
-        //---------------------------------------------------
-        
- 
-        switch(category){
-            case(0):
-            {
-                categoryType = "All";
-                break;
-            }
-            case(1):
-            {
-                categoryType = "CAT";
-                break;
-            }
-            case(2):
-            {
-                categoryType = "HOU";
-                break;
-            }
-            case(3):
-            {
-                categoryType = "ELC";
-                break;
-            }
-            case(4):
-            {
-                categoryType = "CCA";
-                break;
-            }
-         
-        }
-        
-        switch(date){
-            case(0):
-            {
-                period = "3";
-                break;
-            }
-            case(1):
-            {
-                period = "6";
-                break;
-            }
-            case(2):
-            {
-                period = "12";
-                break;
-            }
-            case(3):
-            {
-                period = "ALL";
-                break;
-            }
-         
-        }
-        */
         //---------------------------------------------------
         
         this.populate_advertisements_table();
@@ -221,8 +157,18 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
         jTabbedPane4.addTab("Advertisements", advPanel);
 
         editButton.setText("Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
 
         deleteButton.setText("Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
 
         myAdvertisements_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -298,22 +244,64 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
 
     /*~~~~~~~~~~ Add Advertisement ~~~~~~~~~~*/
     private void addAdvButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAdvButtonActionPerformed
+          AddAdvertisement add = new AddAdvertisement(this,DB,User_ID);
+          add.setVisible(true);
+        //AddAdvertisement addAdv = new AddAdvertisement(this,DB, User_ID);
+        //addAdv.setVisible(true);
         // TODO add your handling code here:
         //FIXME: check name for add advertisement screen
-        //AddAdvertisementFrame addFrame=new AddAdvertisementFrame(this,DB,Advertisement_ID);
+        //AddAdvertisement addFrame= new AddAdvertisement(this,DB,User_ID);
         //addFrame.setVisible(true);
     }//GEN-LAST:event_addAdvButtonActionPerformed
 
     private void goFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goFilterButtonActionPerformed
-
         
         
-        Object[][] ads = DB.getFilterdAdevertisements("CAT","","");
+        String category = categoryDrop.getItemAt(categoryDrop.getSelectedIndex()) ;
+        String details = titleDescText.getText().toString();
+        String period = periodDrop.getItemAt(periodDrop.getSelectedIndex());
+        if(period == "Last 3 months"){
+        period = "3";
+        } else if(period == "Last 6 months"){
+        period = "3";
+        } else if(period == "Last 12 months"){
+        period = "3";
+        } else{
+        period = "Life";
+        }
+        
+        
+        
+        Object[][] ads = DB.getFilterdAdevertisements(category,period,details);
+        
         this.advertisements_table.setModel(new DefaultTableModel(ads,columnsAdv));
         
-    ;
-        
     }//GEN-LAST:event_goFilterButtonActionPerformed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+         //TODO add your handling code here:
+        int row = this.myAdvertisements_table.getSelectedRow();
+        if (row >=0 ) {
+            String Advertisement_ID=(String)myAdvertisements_table.getValueAt(row, 0);
+            String AdvTitle=(String)myAdvertisements_table.getValueAt(row, 1);
+            String AdvDetails=(String)myAdvertisements_table.getValueAt(row, 2);
+            String Price=(String)myAdvertisements_table.getValueAt(row, 3);
+            
+            DB.editAdvertisement(Advertisement_ID, AdvTitle, AdvDetails, Price);
+            populate_myAdvertisements_table();
+}
+    }//GEN-LAST:event_editButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        // TODO add your handling code here:
+        int row = this.myAdvertisements_table.getSelectedRow();
+         if (row >= 0) {
+             String Advertisement_ID=(String)myAdvertisements_table.getValueAt(row, 0);
+             DB.deleteAdvertisement(Advertisement_ID);
+             populate_myAdvertisements_table();
+
+}
+    }//GEN-LAST:event_deleteButtonActionPerformed
 
     /*~~~~~~~~~~ Advertisements Tab (filter category, filter period, filter title) ~~~~~~~~~~*/
     private void categoryDropActionPerformed(java.awt.event.ActionEvent evt) {                                             
@@ -329,26 +317,26 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
      }
     
     /*~~~~~~~~~~ My Advertisements Tab (edit, delete) ~~~~~~~~~~*/
-    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
-        int row = this.myAdvertisements_table.getSelectedRow();
-        if (row >=0 ) {
-            String AdvTitle=(String)myAdvertisements_table.getValueAt(row, 1);
-            String AdvDetails=(String)myAdvertisements_table.getValueAt(row, 2);
-            String Price=(String)myAdvertisements_table.getValueAt(row, 3);
-            
-            //FIXME: should they be able to edit the date
-            String AdvDateTime=(String)myAdvertisements_table.getValueAt(row, 5);
-            
-            //FIXME: check what the method in DB is named
-            //DB.changeAdvertisementStatus(AdvTitle, AdvDetails, Price);
-        }
-    } 
+//    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+//        // TODO add your handling code here:
+//        int row = this.myAdvertisements_table.getSelectedRow();
+//        if (row >=0 ) {
+//            String AdvTitle=(String)myAdvertisements_table.getValueAt(row, 1);
+//            String AdvDetails=(String)myAdvertisements_table.getValueAt(row, 2);
+//            String Price=(String)myAdvertisements_table.getValueAt(row, 3);
+//            
+//            //FIXME: should they be able to edit the date
+//            String AdvDateTime=(String)myAdvertisements_table.getValueAt(row, 5);
+//            
+//            //FIXME: check what the method in DB is named
+//            //DB.changeAdvertisementStatus(AdvTitle, AdvDetails, Price);
+//        }
+//    } 
     
-     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {
-         // TODO add your handling code here:
-     }
-     
+//     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {
+//         // TODO add your handling code here:
+//     }
+//     
     /*~~~~~~~~~~ Populate Functions ~~~~~~~~~~*/
     public void populate_advertisements_table() {
         
@@ -372,17 +360,6 @@ public class AdvertisementsFrame extends javax.swing.JFrame {
         //Object[][] myAdvertisements_data=DB.getAdvertisements(Advertisement_ID);
         //this.myAdvertisements_table.setModel(new DefaultTableModel(myAdvertisements_data, columnsMyAdv));
     }
-    
-    private void getColumns()
-    {
-        
-        
-    
-    }
-    private void filter(String filterd){
-    
-    }
-    
     /**
      * @param args the command line arguments
      */
